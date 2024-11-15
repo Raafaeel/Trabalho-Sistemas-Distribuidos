@@ -5,9 +5,13 @@ from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, Float, Boolean, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configuração do banco de dados
-DATABASE_URL = "sqlite:///./dados_saude.db"
+DATABASE_URL = os.getenv("DATABASE_URL")
+print(f"DATABASE_URL: {DATABASE_URL}")
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 # Inicialização da base de dados e criação de sessão
@@ -22,7 +26,7 @@ class DadosColetados(Base):
     __tablename__ = "dados_coletados"
     seq = Column(Integer, primary_key=True, index=True)      # Chave primária
     codigo = Column(Integer, nullable=False)                 # ID do usuário
-    data_hora = Column(DateTime, default=datetime.utcnow)    # Data e hora da coleta dos dados
+    data_hora = Column(DateTime, default=datetime.utc)    # Data e hora da coleta dos dados
     tipo = Column(Integer, nullable=False)                   # Tipo da medida (1: Pressão Arterial, 2: SPO2, 3: Temperatura)
     valor1 = Column(Float, nullable=False)                   # Valor principal
     valor2 = Column(Float)                                   # Valor secundário (opcional)
@@ -60,7 +64,7 @@ def get_db():
 # Rota para adicionar um novo registro de dados (POST)
 @app.post("/dados", response_model=DadosColetadosResponse)
 def adicionar_dados(dado: DadosColetadosCreate, db: SessionLocal = next(get_db())):
-    novo_dado = DadosColetados(**dado.dict())
+    novo_dado = DadosColetados(**dado.model_dump())
     db.add(novo_dado)     # Adiciona o novo registro ao banco de dados
     db.commit()            # Confirma a transação
     db.refresh(novo_dado)  # Atualiza a instância com os dados salvos
@@ -88,14 +92,14 @@ def atualizar_dado(seq: int, dado_update: DadosColetadosCreate, db: SessionLocal
         raise HTTPException(status_code=404, detail="Dado não encontrado")
     
     # Atualiza os campos do registro com os novos valores recebidos
-    for key, value in dado_update.dict().items():
+    for key, value in dado_update.model_dump().items():
         setattr(dado, key, value)
     db.commit()   # Salva as alterações no banco de dados
     db.refresh(dado)  # Atualiza a instância com os dados salvos
     return dado       # Retorna o registro atualizado
 
 # Rota para excluir um registro pelo seu ID (seq) (DELETE)
-@app.delete("/dados/{seq}", response_model=dict)
+@app.delete("/dados/{seq}", response_model=model_dump)
 def excluir_dado(seq: int, db: SessionLocal = next(get_db())):
     dado = db.query(DadosColetados).filter(DadosColetados.seq == seq).first()
     if dado is None:
