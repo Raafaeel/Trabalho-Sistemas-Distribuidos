@@ -35,8 +35,8 @@ def gerarDados(tipo, codigoUsuario):
                 valor1 = round(random.uniform(30, 45), 2)
     
     dataHora = datetime.now()
-    dataFormatada = dataHora.strftime("%d/%m/%Y %H:%M:%S")
+    dataFormatada = dataHora.strftime("%Y-%m-%d %H:%M:%S")
 
     if(valor2 == None):
-        return {"CodigoUsuario" : codigoUsuario, "DataHora" : dataFormatada, "Tipo" : tipo, "Valor1": valor1}
-    return {"CodigoUsuario" : codigoUsuario, "DataHora" : dataFormatada, "Tipo" : tipo, "Valor1": valor1, "Valor2": valor2}
+        return {"codigo" : codigoUsuario,  "Tipo" : tipo, "Valor1": valor1}
+    return {"codigo" : codigoUsuario,  "Tipo" : tipo, "Valor1": valor1, "Valor2": valor2, "EmCasa": None}

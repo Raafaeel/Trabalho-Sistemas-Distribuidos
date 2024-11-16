@@ -39,7 +39,7 @@ class DadosColetadosBase(BaseModel):
     Tipo: int
     Valor1: float
     Valor2: Optional[float] = None
-    EmCasa: Optional[bool] = False
+    EmCasa: Optional[bool] = None
 
 class DadosColetadosCreate(DadosColetadosBase):
     pass
