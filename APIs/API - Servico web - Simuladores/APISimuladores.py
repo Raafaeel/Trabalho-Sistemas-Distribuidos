@@ -22,31 +22,31 @@ app = FastAPI()
 
 # SQLAlchemy model
 class DadosColetados(Base):
-    __tablename__ = "dados_coletados"
+    __tablename__ = "DadosColetados"
     seq = Column(Integer, primary_key=True, index=True)
     codigo = Column(Integer, nullable=False)
-    data_hora = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    tipo = Column(Integer, nullable=False)
-    valor1 = Column(Float, nullable=False)
-    valor2 = Column(Float)
-    em_casa = Column(Boolean, default=False)
+    DataHora = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    Tipo = Column(Integer, nullable=False)
+    Valor1 = Column(Float, nullable=False)
+    Valor2 = Column(Float)
+    EmCasa = Column(Boolean, default=False)
 
 Base.metadata.create_all(bind=engine)
 
 # Pydantic models
 class DadosColetadosBase(BaseModel):
     codigo: int
-    tipo: int
-    valor1: float
-    valor2: Optional[float] = None
-    em_casa: Optional[bool] = False
+    Tipo: int
+    Valor1: float
+    Valor2: Optional[float] = None
+    EmCasa: Optional[bool] = None
 
 class DadosColetadosCreate(DadosColetadosBase):
     pass
 
 class DadosColetadosResponse(DadosColetadosBase):
     seq: int
-    data_hora: datetime
+    DataHora: datetime
 
     class Config:
         from_attributes = True  # Updated for Pydantic v2
