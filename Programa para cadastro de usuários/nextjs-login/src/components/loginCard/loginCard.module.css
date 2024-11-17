@@ -1,0 +1,14 @@
+.Card {
+    background-color: rgb(255, 255, 255);
+    width:400px;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    justify-content: center;
+}
+
+.title{
+    text-align: center;
+    justify-content: center;
+
+}
