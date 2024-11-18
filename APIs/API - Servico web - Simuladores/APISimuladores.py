@@ -80,7 +80,7 @@ def listar_dados(codigo: Optional[int] = None, db: Session = Depends(get_db)):
 # Route to get a specific record by ID (seq) (GET)
 @app.get("/dados/{seq}", response_model=DadosColetadosResponse)
 def obter_dado(seq: int, db: Session = Depends(get_db)):
-    dado = db.query(DadosColetados).filter(DadosColetados.seq == seq).first()
+    dado = db.query(DadosColetados).filter(DadosColetados.seq == seq).all()
     if dado is None:
         raise HTTPException(status_code=404, detail="Dado não encontrado")
     return dado
