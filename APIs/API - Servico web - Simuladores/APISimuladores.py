@@ -70,8 +70,11 @@ def adicionar_dados(dado: DadosColetadosCreate, db: Session = Depends(get_db)):
 
 # Route to list all collected data (GET)
 @app.get("/dados", response_model=List[DadosColetadosResponse])
-def listar_dados(db: Session = Depends(get_db)):
-    dados = db.query(DadosColetados).all()
+def listar_dados(codigo: Optional[int] = None, db: Session = Depends(get_db)):
+    if codigo is not None:
+        dados = db.query(DadosColetados).filter(DadosColetados.codigo == codigo).all()
+    else:
+        dados = db.query(DadosColetados).all()
     return dados
 
 # Route to get a specific record by ID (seq) (GET)
