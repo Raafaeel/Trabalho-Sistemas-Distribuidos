@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, Column, Integer, Float, Boolean, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 import os
 
 load_dotenv()
@@ -19,6 +20,23 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+     "http://localhost:5000",
+    "http://127.0.0.1:5000",
+     "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allows specific origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all HTTP methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 # SQLAlchemy model
 class DadosColetados(Base):
@@ -77,10 +95,16 @@ def listar_dados(codigo: Optional[int] = None, db: Session = Depends(get_db)):
         dados = db.query(DadosColetados).all()
     return dados
 
+<<<<<<< HEAD
 # Route to get a specific record by ID (seq) (GET)
 @app.get("/dados/{seq}", response_model=DadosColetadosResponse)
 def obter_dado(seq: int, db: Session = Depends(get_db)):
     dado = db.query(DadosColetados).filter(DadosColetados.seq == seq).all()
+=======
+@app.get("/dados/{codigo}", response_model=DadosColetadosResponse)
+def obter_dado_por_codigo(codigo: int, db: Session = Depends(get_db)):
+    dado = db.query(DadosColetados).filter(DadosColetados.codigo == codigo).first()
+>>>>>>> 71c95c0285349d8a1d501ae928b8c6716dfade01
     if dado is None:
         raise HTTPException(status_code=404, detail="Dado não encontrado")
     return dado
