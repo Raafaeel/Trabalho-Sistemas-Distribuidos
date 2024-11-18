@@ -96,7 +96,7 @@ def listar_dados(codigo: Optional[int] = None, db: Session = Depends(get_db)):
     return dados
 
 # Route to get a specific record by ID (seq) (GET)
-@app.get("/dados/{codigo}", response_model=DadosColetadosResponse)
+@app.get("/dados/{codigo}", response_model=List[DadosColetadosResponse])
 def obter_dado(codigo: int, db: Session = Depends(get_db)):
     dado = db.query(DadosColetados).filter(DadosColetados.codigo == codigo).all()
     if dado is None:
