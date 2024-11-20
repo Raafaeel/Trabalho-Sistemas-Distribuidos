@@ -34,9 +34,6 @@ export default function Navbar() {
             <a href="/dadosColetados" className="text-lg no-underline text-black hover:text-[#0040ff] mx-2">
               Dados Coletados
             </a>
-            <a href="/dashboard" className="text-lg no-underline text-black hover:text-[#0040ff] mx-2">
-              Dashboard
-            </a>
             <button onClick={handleLogout} className="text-lg text-red-600 hover:text-red-800 mx-2">
               Sair
             </button>

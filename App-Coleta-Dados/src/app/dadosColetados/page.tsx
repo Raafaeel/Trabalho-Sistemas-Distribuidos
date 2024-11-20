@@ -12,20 +12,40 @@ export default function DadosColetados() {
   const [dado, setDado] = useState<Dado>(Dado.vazio());
   const [visivel, setVisivel] = useState<'tabela' | 'form'>('tabela');
   const [dados, setDados] = useState<Dado[]>([]);
+  const [erro, setErro] = useState("");
+  const [codigoUsuario, setCodigoUsuario] = useState<number | null>(null);
 
   useEffect(() => {
-    if (visivel === 'tabela') {
+    const codigo = localStorage.getItem('codigoUsuario');
+    if (codigo) {
+      setCodigoUsuario(Number(codigo));
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("Visivel:", visivel, "Codigo Usuario:", codigoUsuario);
+  
+    if (visivel === 'tabela' && codigoUsuario !== null) {
       const loadDados = async () => {
         try {
-          const dadosCarregados = await fetchDados();
-          setDados(dadosCarregados);
+          const dadosCarregados = await fetchDados(codigoUsuario);
+          console.log("Dados carregados:", dadosCarregados);
+          
+          if (dadosCarregados && dadosCarregados.length > 0) {
+            setDados(dadosCarregados);
+            setErro('');
+          } else {
+            setErro('Não há dados disponíveis para o usuário.');
+          }
         } catch (error) {
-          console.error("Erro ao buscar dados coletados:", error);
+          console.error("Erro ao carregar dados:", error);
+          setErro('Ocorreu um erro ao carregar os dados. Por favor, tente novamente mais tarde.');
         }
-      }
+      };
       loadDados();
     }
-  }, [visivel]);
+  }, [visivel, codigoUsuario]);
+  
 
   function dadoSelecionado(dado: Dado) {
     setDado(dado);
@@ -38,18 +58,19 @@ export default function DadosColetados() {
   }
 
   async function dadoExcluido(dado: Dado) {
-    const confirmacao =
-      window.confirm("Tem certeza de que deseja excluir este dado?");
+    const confirmacao = window.confirm("Tem certeza de que deseja excluir este dado?");
+    
     if (confirmacao) {
       try {
         if (dado.seq !== null) {
           await excluirDados(dado.seq);
+          setDados(prevDados => prevDados.filter(d => d.seq !== dado.seq));
         } else {
-          console.error("dadoID é null!");
+          console.error("dado.seq é null!");
         }
-        setDados(prevDados => prevDados.filter(d => d.seq !== dado.seq));
       } catch (error) {
         console.error("Erro ao excluir dado:", error);
+        setErro('Erro ao excluir dado. Tente novamente.');
       }
     }
   }
@@ -60,6 +81,7 @@ export default function DadosColetados() {
       setVisivel("tabela");
     } catch (error) {
       console.error("Erro ao salvar dado:", error);
+      setErro('Erro ao salvar dado. Tente novamente.');
     }
   }
 
@@ -69,6 +91,7 @@ export default function DadosColetados() {
       setVisivel("tabela");
     } catch (error) {
       console.error("Erro ao atualizar dado:", error);
+      setErro('Erro ao atualizar dado. Tente novamente.');
     }
   }
 
@@ -96,12 +119,14 @@ export default function DadosColetados() {
               dadosSelecionado={dadoSelecionado}
               dadosExcluido={dadoExcluido}
             />
+            {erro && <p className="mt-4 text-red-600 text-sm text-left">{erro}</p>}
           </>
         ) : (
           <FormularioDado
             dados={dado}
             dadosMudou={salvarOuAlterarDado}
             cancelado={() => setVisivel('tabela')}
+            codigoUsuario={codigoUsuario}
           />
         )}
       </Layout>

@@ -30,13 +30,15 @@ export default function Tabela(props: TabelaProps) {
     return props.dados?.map((dados, i) => (
       <tr key={dados.seq} className={`${i % 2 === 0 ? 'bg-blue-100' : 'bg-blue-50'} text-gray-800`}>
         <td className="text-left p-3">{dados.seq}</td>
-        <td className="text-left p-3">{dados.codigoUsuario}</td>
-        <td className="text-left p-3">{dados.dataHora.toLocaleString()}</td>
-        <td className="text-left p-3">{dados.tipo}</td>
-        <td className="text-left p-3">{dados.valor1}</td>
-        <td className="text-left p-3">{dados.valor2}</td>
+        <td className="text-left p-3">{dados.codigo}</td>
+        <td className="text-left p-3">
+          {new Date(dados.dataHora).toLocaleString('sv-SE').slice(0, 16)} {/* Formatação explícita */}
+        </td>
+        <td className="text-left p-3">{dados.Tipo}</td>
+        <td className="text-left p-3">{dados.Valor1}</td>
+        <td className="text-left p-3">{dados.Valor2}</td>
         <td className="text-center p-3">
-          <input type="checkbox" checked={dados.emCasa} readOnly />
+          <input type="checkbox" checked={dados.EmCasa} readOnly />
         </td>
         {exibirAcoes ? renderizarAcoes(dados) : null}
       </tr>

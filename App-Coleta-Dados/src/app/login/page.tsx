@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
+import { login } from "@/service/authService";
 
 export default function TelaLogin() {
   const [usuario, setUsuario] = useState("");
@@ -9,12 +10,22 @@ export default function TelaLogin() {
   const [erro, setErro] = useState("");
   const router = useRouter();
 
-  const handleLogin = () => {
-    if (usuario === "admin" && senha === "123456") {
-      localStorage.setItem("usuarioAutenticado", "true");
-      router.push("/dadosColetados");
-    } else {
-      setErro("Credenciais inválidas.");
+  const handleLogin = async () => {
+    console.log("Tentando fazer login...");
+
+    try {
+      const codigoUsuario = await login(usuario, senha);
+      console.log("Código do usuário:", codigoUsuario);
+
+      if (codigoUsuario) {
+        localStorage.setItem("usuarioAutenticado", "true");
+        router.push("/dadosColetados");
+      } else {
+        setErro("Credenciais inválidas.");
+      }
+    } catch (error) { 
+      console.error("Erro ao tentar fazer login:", error);
+      setErro("Erro ao fazer login.");
     }
   };
 

@@ -2,12 +2,12 @@ import { stringParaEntradaDeData } from "@/utils/converters"
 
 export default class DadosColetados {
   seq: number | null;
-  codigoUsuario: number;
+  codigo: number;
   dataHora: string;
-  tipo: number;
-  valor1: number;
-  valor2: number;
-  emCasa: boolean;
+  Tipo: number;
+  Valor1: number;
+  Valor2: number;
+  EmCasa: boolean;
 
   constructor(
     seq: number | null,
@@ -19,12 +19,13 @@ export default class DadosColetados {
     emCasa: boolean
   ) {
     this.seq = seq;
-    this.codigoUsuario = codigoUsuario;
+    this.codigo = codigoUsuario;
     this.dataHora = dataHora;
-    this.tipo = tipo;
-    this.valor1 = valor1;
-    this.valor2 = valor2;
-    this.emCasa = emCasa;
+    this.Tipo = tipo;
+    this.Valor1 = valor1;
+    this.Valor2 = valor2;
+    this.EmCasa = emCasa !== undefined ? emCasa : false;
+
   }
 
   static vazio(): DadosColetados {
