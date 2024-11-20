@@ -33,10 +33,5 @@ def gerarDados(tipo, codigoUsuario):
         elif tipo == 3:  # Temperatura Corporal
             while valor1 == None or valor1 >= 36 and valor1 <= 37.5:
                 valor1 = round(random.uniform(30, 45), 2)
-    
-    dataHora = datetime.now()
-    dataFormatada = dataHora.strftime("%Y-%m-%d %H:%M:%S")
 
-    if(valor2 == None):
-        return {"codigo" : codigoUsuario,  "Tipo" : tipo, "Valor1": valor1}
     return {"codigo" : codigoUsuario,  "Tipo" : tipo, "Valor1": valor1, "Valor2": valor2, "EmCasa": None}

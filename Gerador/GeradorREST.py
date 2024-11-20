@@ -1,16 +1,17 @@
-import socket
 import random
 import time
 import json
+import requests
 from GeradorDados import gerarDados
 
-PORT = 8000
-HOST = "localhost"  
+HOST = "apisimuladoresimagem-v2-668469425698.southamerica-east1.run.app"  
+
+def enviarApi(message):
+    url = f"https://{HOST}/dados"
+    res = requests.post(url, json = message)
+    print(res.json)
 
 def simularSensores(tipo, quantidadeValores, intervaloMin, intervaloMax, codigoUsuario):
-
-    clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    clientSocket.connect((HOST, PORT))
 
     for _ in range(quantidadeValores):
 
@@ -18,13 +19,11 @@ def simularSensores(tipo, quantidadeValores, intervaloMin, intervaloMax, codigoU
         print(f"Dados gerados: {data}")
         
         message = json.dumps(data)
-        clientSocket.send(message.encode('utf-8'))
+        enviarApi(data)
         print(f"Dados enviados: {message}")
 
         interval = random.uniform(intervaloMin, intervaloMax)
         time.sleep(interval)
-
-    clientSocket.close()
 
 tipo = int(input("Informe o tipo de sensor (1: Pressão Arterial, 2: SPO2, 3: Temperatura): "))
 codigoUsuario = int(input("Informe o código do Usuario: "))
