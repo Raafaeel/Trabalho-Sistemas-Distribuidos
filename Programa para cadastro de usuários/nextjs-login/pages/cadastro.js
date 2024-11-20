@@ -90,7 +90,7 @@ export default function CadastroPage() {
                     </select>
                     <Button>Cadastrar</Button>
                     {error && <p className={styles.error}>{error}</p>}
-                    <Link href='/login'>Ainda não tem uma conta?</Link>
+                    <Link href='/login'>Ja passui uma conta?</Link>
                 </form>
             </LoginCard>
         </div>
