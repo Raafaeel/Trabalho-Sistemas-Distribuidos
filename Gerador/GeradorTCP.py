@@ -17,8 +17,8 @@ def simularSensores(tipo, quantidadeValores, intervaloMin, intervaloMax, codigoU
         data = gerarDados(tipo, codigoUsuario)
         print(f"Dados gerados: {data}")
         
-        message = json.dumps(data)
-        clientSocket.send(message.encode('utf-8'))
+        message = json.dumps(data).encode()
+        clientSocket.send(message)
         print(f"Dados enviados: {message}")
 
         interval = random.uniform(intervaloMin, intervaloMax)
