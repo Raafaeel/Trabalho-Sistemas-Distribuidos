@@ -84,10 +84,13 @@ export default function CadastroPage() {
                         value={formData.latitude}
                         onChange={(e) => handleFormEdit(e, 'latitude')}
                     />
-                    <select {...register("sexo", { required: true })}>
-                        <option value="female">Feminino</option>
-                        <option value="male">Masculino</option>
-                    </select>
+                        <select
+                        {...register("sexo", { required: true })}
+                        className={styles.genderSelect}>
+                            <option value="female">Female</option>
+                            <option value="male">Male</option>
+                            </select>
+
                     <Button>Cadastrar</Button>
                     {error && <p className={styles.error}>{error}</p>}
                     <Link href='/login'>Ja passui uma conta?</Link>
