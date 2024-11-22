@@ -30,21 +30,30 @@ export default function CadastroPage() {
 
     const handleForm = async (data) => {
         try {
-            const response = await fetch('/api/user/cadastro', {
+            const response = await fetch('http://localhost:8000/dados', { // URL da sua API
                 method: 'POST',
-                body: JSON.stringify({ ...formData, ...data }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    codigo: formData.codigo,  // Adapte os campos conforme a API
+                    Tipo: formData.tipo,
+                    Valor1: parseFloat(formData.valor1),
+                    Valor2: parseFloat(formData.valor2),
+                    EmCasa: formData.emCasa === 'true',
+                }),
             });
-
+    
             const json = await response.json();
-            if (response.status !== 201) throw new Error(json.message || 'Erro inesperado');
-
-            setCookie('authorization', json);
-            router.push('/');
+            if (!response.ok) throw new Error(json.message || 'Erro inesperado');
+    
+            alert('Cadastro realizado com sucesso!');
+            setFormData({ name: '', email: '', password: '', longitude: '', latitude: '' });
         } catch (err) {
             setError(err.message || 'Erro ao processar o cadastro');
         }
     };
-
+    
     return (
         <div className={styles.background}>
             <LoginCard title="Faça sua conta">
