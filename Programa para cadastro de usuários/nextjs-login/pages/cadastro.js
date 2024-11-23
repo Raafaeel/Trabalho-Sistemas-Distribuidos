@@ -28,7 +28,8 @@ export default function CadastroPage() {
         });
     };
 
-    const handleForm = async (data) => {
+    const handleForm = async (e, data) => {
+        e.preventDefault()
         try {
             const response = await fetch("https://myfastapiapp-v3-668469425698.southamerica-east1.run.app/usuarios", {
                 method: 'POST',
@@ -45,6 +46,15 @@ export default function CadastroPage() {
                     senha: formData.password,
                 }),
             });
+            console.log(JSON.stringify({
+                Nome: formData.name,
+                Nascimento: formData.nascimento,
+                Sexo: formData.sexo,
+                Latitude: parseFloat(formData.latitude),
+                Longitude: parseFloat(formData.longitude),
+                login: formData.email,
+                senha: formData.password,
+            }))
 
             const json = await response.json();
             if (!response.ok) throw new Error(json.message || 'Erro inesperado');
@@ -59,7 +69,9 @@ export default function CadastroPage() {
                 latitude: '',
                 sexo: '',
             });
+
         } catch (err) {
+            console.log(err.message || 'Erro ao processar o cadastro');
             setError(err.message || 'Erro ao processar o cadastro');
         }
     };
