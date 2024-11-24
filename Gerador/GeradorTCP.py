@@ -5,7 +5,7 @@ import json
 from GeradorDados import gerarDados
 
 PORT = 8000
-HOST = "localhost"  
+HOST = "10.128.0.3"  
 
 def simularSensores(tipo, quantidadeValores, intervaloMin, intervaloMax, codigoUsuario):
 

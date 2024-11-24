@@ -37,4 +37,4 @@ def atender_consumidor(client_socket):
         client_socket.close()
         
 
-start_server("localhost", 8000)
+start_server("10.128.0.3", 8000)
