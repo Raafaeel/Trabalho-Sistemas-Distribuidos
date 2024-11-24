@@ -8,8 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from dotenv import load_dotenv
 import os
 from fastapi.middleware.cors import CORSMiddleware
-#from google.oauth2 import id_token
-#from google.auth.transport import requests
+
 
 
 load_dotenv()
@@ -73,21 +72,12 @@ class Usuario(UsuarioBase):
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-     "http://localhost:5000",
-    "http://127.0.0.1:5000",
-     "http://localhost:8000",
-    "http://127.0.0.1:8000",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allows specific origins
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all HTTP methods
-    allow_headers=["*"],  # Allows all headers
+    allow_origins=["*"],  # Allow all origins for testing; restrict in production
+    allow_credentials=True,  # Allow cookies or authorization headers
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allow all HTTP headers
 )
 
 def get_db():
@@ -112,6 +102,23 @@ def create_usuario(usuario: UsuarioCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_usuario)
     return db_usuario
+
+@app.post("/usuarios/login", response_model=Usuario)
+def login(login: str, senha: str, db: Session = Depends(get_db)):
+    usuario = db.query(UsuarioDB).filter(UsuarioDB.login == login, UsuarioDB.senha == senha).first()
+    if usuario is None:
+        raise HTTPException(status_code=401, detail="Login ou senha inválidos")
+    return usuario
+
+@app.post("/usuarios/loginJson", response_model=Usuario)
+def loginJson(request: LoginRequest, db: Session = Depends(get_db)):
+    usuario = db.query(UsuarioDB).filter(
+        UsuarioDB.login == request.login,
+        UsuarioDB.senha == request.senha
+    ).first()
+    if usuario is None:
+        raise HTTPException(status_code=401, detail="Login ou senha inválidos")
+    return usuario
 
 @app.get("/usuarios", response_model=List[Usuario])
 def read_usuarios(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -147,29 +154,16 @@ def delete_usuario(codigo: int, db: Session = Depends(get_db)):
     db.commit()
     return
 
-@app.post("/usuarios/login", response_model=Usuario)
-def login(login: str, senha: str, db: Session = Depends(get_db)):
-    usuario = db.query(UsuarioDB).filter(UsuarioDB.login == login, UsuarioDB.senha == senha).first()
-    if usuario is None:
-        raise HTTPException(status_code=401, detail="Login ou senha inválidos")
-    return usuario
 
-@app.post("/usuarios/loginJson", response_model=Usuario)
-def loginJson(request: LoginRequest, db: Session = Depends(get_db)):
-    usuario = db.query(UsuarioDB).filter(
-        UsuarioDB.login == request.login,
-        UsuarioDB.senha == request.senha
-    ).first()
-    if usuario is None:
-        raise HTTPException(status_code=401, detail="Login ou senha inválidos")
-    return usuario
 
-"""
 @app.post("/auth/google")
 def google_auth(token: str, db: Session = Depends(get_db)):
     try:
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), "668469425698-17ulsbs51rvuejdd1pkco6bhtilotqs5.apps.googleusercontent.com")
+        idinfo = id_token.verify_oauth2_token(
+            token, requests.Request(), "668469425698-17ulsbs51rvuejdd1pkco6bhtilotqs5.apps.googleusercontent.com"
+        )
         
+        # Validate the issuer
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
 
@@ -177,25 +171,31 @@ def google_auth(token: str, db: Session = Depends(get_db)):
         email = idinfo["email"]
         name = idinfo.get("name", "Unknown User")
 
+        # Check if the user exists in the database
         user = db.query(UsuarioDB).filter(UsuarioDB.login == email).first()
         if not user:
+            # Create the user if not found
             user = UsuarioDB(
                 Nome=name,
-                Nascimento=None,
-                Sexo="U",
+                Nascimento=date.today(),
+                Sexo="M",  
                 Latitude=None,
                 Longitude=None,
                 login=email,
-                senha=None,
+                senha=None,  # Password is not needed for Google users
             )
             db.add(user)
             db.commit()
             db.refresh(user)
 
+        # Return the user information
         return {
             "message": "Login successful",
-            "user": {"id": user.codigo, "name": user.Nome, "email": user.login},
+            "user": {
+                "id": user.codigo,
+                "name": user.Nome,
+                "email": user.login,
+            }
         }
     except ValueError as e:
         raise HTTPException(status_code=400, detail="Invalid Google token") from e
-"""
