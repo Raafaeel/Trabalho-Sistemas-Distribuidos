@@ -15,7 +15,6 @@ export const login = async (username, senha) => {
       return null;
     }
   } catch (error) {
-    console.error("Erro de login:", error);
     throw new Error(error.response?.data?.message || 'Dados de login inválidos.');
   }
 };
@@ -41,9 +40,6 @@ export const getUserDetails = async () => {
 
     const url = `${BASE_URL}/usuarios/${codigoUsuario}`;
     const response = await axios.get(url);
-
-    console.log('Dados do usuário:', response.data);
-
     const { Latitude, Longitude } = response.data;
 
     if (Latitude && Longitude) {
@@ -52,7 +48,6 @@ export const getUserDetails = async () => {
       throw new Error('Latitude e longitude não encontrados nos dados do usuário.');
     }
   } catch (error) {
-    console.error('Erro ao buscar localização do usuário:', error);
     throw new Error('Não foi possível obter os detalhes do usuário.');
   }
 };

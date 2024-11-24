@@ -77,6 +77,7 @@ export default function FormularioDado({ dado = {}, onSalvar, onCancelar }) {
     );
 
     if (onSalvar) {
+      verificarEmCasa();
       onSalvar(novoDado);
     } else {
       console.error("Função onSalvar não foi fornecida corretamente");
