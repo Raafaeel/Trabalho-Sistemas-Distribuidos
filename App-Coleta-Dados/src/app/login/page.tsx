@@ -13,7 +13,6 @@ export default function TelaLogin() {
 
   const handleLogin = async () => {
     console.log("Tentando fazer login...");
-    console.log('API URL de login:', process.env.NEXT_PUBLIC_API_URL_LOGIN);
 
     try {
       const codigoUsuario = await login(usuario, senha);

@@ -9,7 +9,7 @@ export const login = async (username: string, senha: string): Promise<number | n
     const response = await axios.post(url);
 
     if (response.data) {
-      localStorage.setItem('codigoUsuario', response.data.codigo.toString());
+      localStorage.setItem('codigoUsuario', response.data.codigo);
       return response.data.codigo;
     } else {
       return null;
@@ -23,13 +23,14 @@ export const loginWithGoogle = async (googleToken: string): Promise<void> => {
   try {
     const response = await axios.post(`${BASE_URL}/auth/google`, { token: googleToken });
 
-    if (response.status === 200 && response.data.codigo) {
-      localStorage.setItem("codigoUsuario", response.data.codigo.toString());
-      return response.data.codigo;
+    if (response.status === 200 && response.data.user?.id) {
+      localStorage.setItem("codigoUsuario", response.data.user.id.toString());
+      return response.data.user.id;
     } else {
       throw new Error("Erro ao autenticar com Google.");
     }
   } catch (error) {
+    console.error(error);
     throw new Error("Não foi possível fazer login com Google.");
   }
 };
@@ -46,4 +47,3 @@ export const getCodigoUsuario = (): number | null => {
 export const logout = () => {
   localStorage.removeItem('codigoUsuario');
 };
-
