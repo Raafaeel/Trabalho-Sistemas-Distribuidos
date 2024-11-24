@@ -25,7 +25,7 @@ export default function LoginPage() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch("https://myfastapiapp-v3-668469425698.southamerica-east1.run.app/usuarios", {
+            const response = await fetch("https://myfastapiapp-v3-668469425698.southamerica-east1.run.app/usuarios/loginJson", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -35,6 +35,11 @@ export default function LoginPage() {
                     senha: formData.password,
                 }),
             });
+            console.log(JSON.stringify({
+                
+                login: formData.email,
+                senha: formData.password,
+            }))
 
             if (!response.ok) {
                 throw new Error('Login ou senha inválidos');
@@ -42,7 +47,7 @@ export default function LoginPage() {
 
             const data = await response.json();
             setCookie('user', JSON.stringify(data)); // Armazena o usuário autenticado
-            router.push('/dashboard'); // Redireciona após login bem-sucedido
+            router.push('/'); // Redireciona após login bem-sucedido
         } catch (err) {
             setError(err.message);
         }
