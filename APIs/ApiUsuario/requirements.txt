@@ -16,4 +16,5 @@ starlette==0.41.2
 typing_extensions==4.12.2
 uvicorn==0.32.0
 python-multipart==0.0.6
-google-auth==2.22.0
+requests==2.31.0
+google-auth>=2.22.0

@@ -21,7 +21,12 @@ export const login = async (username: string, senha: string): Promise<number | n
 
 export const loginWithGoogle = async (googleToken: string): Promise<void> => {
   try {
-    const response = await axios.post(`${BASE_URL}/auth/google`, { token: googleToken });
+    const url = `${BASE_URL}/auth/google`;
+    const response = await axios.post(
+      url,
+      { token: googleToken },
+      { headers: { "Content-Type": "application/json" } }
+    );
 
     if (response.status === 200 && response.data.user?.id) {
       localStorage.setItem("codigoUsuario", response.data.user.id.toString());
@@ -34,6 +39,8 @@ export const loginWithGoogle = async (googleToken: string): Promise<void> => {
     throw new Error("Não foi possível fazer login com Google.");
   }
 };
+
+
 
 export const isAuthenticated = (): boolean => {
   return !!localStorage.getItem('codigoUsuario');

@@ -8,7 +8,7 @@ const LoginGoogle = () => {
   const handleGoogleLoginSuccess = async (response: any) => {
     try {
       const googleToken = response.credential;
-
+      
       await loginWithGoogle(googleToken);
       
       router.push("/dadosColetados");

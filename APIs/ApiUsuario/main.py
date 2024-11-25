@@ -8,7 +8,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from dotenv import load_dotenv
 import os
 from fastapi.middleware.cors import CORSMiddleware
-
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 
 load_dotenv()
@@ -156,46 +157,51 @@ def delete_usuario(codigo: int, db: Session = Depends(get_db)):
 
 
 
+class GoogleAuthRequest(BaseModel):
+    token: str
+
 @app.post("/auth/google")
-def google_auth(token: str, db: Session = Depends(get_db)):
+def google_auth(request: GoogleAuthRequest, db: Session = Depends(get_db)):
     try:
+        # Verify token
         idinfo = id_token.verify_oauth2_token(
-            token, requests.Request(), "668469425698-17ulsbs51rvuejdd1pkco6bhtilotqs5.apps.googleusercontent.com"
+            request.token, requests.Request(), "668469425698-17ulsbs51rvuejdd1pkco6bhtilotqs5.apps.googleusercontent.com"
         )
-        
+
         # Validate the issuer
-        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            raise ValueError('Wrong issuer.')
+        if idinfo["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
+            raise ValueError("Wrong issuer.")
 
         google_id = idinfo["sub"]
         email = idinfo["email"]
         name = idinfo.get("name", "Unknown User")
 
-        # Check if the user exists in the database
+        # Check if user exists
         user = db.query(UsuarioDB).filter(UsuarioDB.login == email).first()
         if not user:
-            # Create the user if not found
+            # Create user if not found
             user = UsuarioDB(
                 Nome=name,
                 Nascimento=date.today(),
-                Sexo="M",  
+                Sexo="U",
                 Latitude=None,
                 Longitude=None,
                 login=email,
-                senha=None,  # Password is not needed for Google users
+                senha=None,
             )
             db.add(user)
             db.commit()
             db.refresh(user)
 
-        # Return the user information
+        # Return the user
         return {
             "message": "Login successful",
             "user": {
                 "id": user.codigo,
                 "name": user.Nome,
                 "email": user.login,
-            }
+            },
         }
     except ValueError as e:
         raise HTTPException(status_code=400, detail="Invalid Google token") from e
+
