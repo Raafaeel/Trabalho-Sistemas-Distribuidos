@@ -10,7 +10,8 @@ const LoginGoogle = () => {
       const googleToken = response.credential;
       
       await loginWithGoogle(googleToken);
-      
+      localStorage.setItem("usuarioAutenticado", "true");
+
       router.push("/dadosColetados");
       console.log("Login com Google bem-sucedido:", response);
     } catch (error) {
