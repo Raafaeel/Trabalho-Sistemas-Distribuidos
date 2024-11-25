@@ -21,22 +21,14 @@ Base = declarative_base()
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-     "http://localhost:5000",
-    "http://127.0.0.1:5000",
-     "http://localhost:8000",
-    "http://127.0.0.1:8000",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allows specific origins
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all HTTP methods
-    allow_headers=["*"],  # Allows all headers
+    allow_origins=["*"],  # Allow all origins for testing; restrict in production
+    allow_credentials=True,  # Allow cookies or authorization headers
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allow all HTTP headers
 )
+
 
 # SQLAlchemy model
 class DadosColetados(Base):
