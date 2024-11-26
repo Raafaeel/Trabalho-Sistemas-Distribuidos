@@ -11,8 +11,8 @@ const LoginGoogle = () => {
 
       await loginWithGoogle(googleToken);
       localStorage.setItem("usuarioAutenticado", "true");
-
-      router.push("/editar");
+      console.log(localStorage.getItem("emailUsuario"));
+      router.push("/editar?email=" + localStorage.getItem("emailUsuario"));
       console.log("Login com Google bem-sucedido:", response);
     } catch (error) {
       console.error("Erro ao autenticar com Google:", error);

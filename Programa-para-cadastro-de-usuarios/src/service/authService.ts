@@ -27,9 +27,10 @@ export const loginWithGoogle = async (googleToken: string): Promise<void> => {
       { token: googleToken },
       { headers: { "Content-Type": "application/json" } }
     );
-    console.log(response);
+    console.log(googleToken);
     if (response.status === 200 && response.data.user?.id) {
       localStorage.setItem("codigoUsuario", response.data.user.id.toString());
+      localStorage.setItem("emailUsuario", response.data.user.email);
       return response.data.user.id; 
     } else {
       throw new Error("Erro ao autenticar com Google.");
