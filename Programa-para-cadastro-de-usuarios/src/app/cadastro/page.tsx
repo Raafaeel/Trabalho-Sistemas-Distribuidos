@@ -73,7 +73,7 @@ export default function CadastroPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-red-500 to-indigo-600">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <h1 className="text-2xl font-semibold text-center text-gray-700 mb-6">Cadastro</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -87,7 +87,7 @@ export default function CadastroPage() {
               placeholder="Seu nome"
               value={formData.name}
               onChange={(e) => handleFormEdit(e, "name")}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
           <div>
@@ -100,7 +100,7 @@ export default function CadastroPage() {
               placeholder="Seu email"
               value={formData.email}
               onChange={(e) => handleFormEdit(e, "email")}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
           <div>
@@ -113,7 +113,7 @@ export default function CadastroPage() {
               placeholder="Sua senha"
               value={formData.password}
               onChange={(e) => handleFormEdit(e, "password")}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
           <div>
@@ -125,7 +125,7 @@ export default function CadastroPage() {
               type="date"
               value={formData.nascimento}
               onChange={(e) => handleFormEdit(e, "nascimento")}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
           <div>
@@ -138,7 +138,7 @@ export default function CadastroPage() {
               placeholder="Latitude"
               value={formData.latitude}
               onChange={(e) => handleFormEdit(e, "latitude")}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
           <div>
@@ -151,7 +151,7 @@ export default function CadastroPage() {
               placeholder="Longitude"
               value={formData.longitude}
               onChange={(e) => handleFormEdit(e, "longitude")}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
           <div>
@@ -162,7 +162,7 @@ export default function CadastroPage() {
               id="sexo"
               value={formData.sexo}
               onChange={(e) => handleFormEdit(e, "sexo")}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               <option value="">Selecione</option>
               <option value="M">Masculino</option>
@@ -171,7 +171,7 @@ export default function CadastroPage() {
           </div>
           <button
             type="submit"
-            className="w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
           >
             Cadastrar
           </button>

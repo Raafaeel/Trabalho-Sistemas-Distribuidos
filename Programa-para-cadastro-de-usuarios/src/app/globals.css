@@ -55,7 +55,7 @@ h2 {
   font-size: 5.6rem;
   text-align: center;
   line-height: 1;
-  color: #0040ff;
+  color: red;
   font-family: 'Arial', sans-serif; 
   letter-spacing: 2px;
 
@@ -70,7 +70,7 @@ h2 {
 .login-button {
   margin-top: 30px;
   padding: 10px 20px;
-  background-color: #0040ff;
+  background-color: #960f0f;
   color: white;
   border: none;
   border-radius: 5px;
@@ -80,5 +80,5 @@ h2 {
 }
 
 .login-button:hover {
-  background-color: #5982fe;
+  background-color: hsl(0, 49%, 45%);
 }
