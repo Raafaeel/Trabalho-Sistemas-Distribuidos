@@ -170,7 +170,7 @@ def google_auth(request: GoogleAuthRequest, db: Session = Depends(get_db)):
     idinfo = None
     for client_id in client_ids:
         try:
-            # Verify token against the current Client ID
+            
             idinfo = id_token.verify_oauth2_token(
                 request.token, requests.Request(), client_id
             )
