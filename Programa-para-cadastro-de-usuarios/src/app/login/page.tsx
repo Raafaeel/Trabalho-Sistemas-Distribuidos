@@ -74,6 +74,8 @@ export default function TelaLogin() {
         {erro && <p className="mt-4 text-red-600 text-sm text-center">{erro}</p>}
 
         <hr className="my-6 border-gray-300" />
+
+        <LoginGoogle />
       </div>
     </div>
   );

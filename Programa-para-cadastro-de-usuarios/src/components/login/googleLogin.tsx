@@ -10,7 +10,8 @@ const LoginGoogle = () => {
       const googleToken = response.credential;
 
       await loginWithGoogle(googleToken);
-      
+      localStorage.setItem("usuarioAutenticado", "true");
+
       router.push("/editar");
       console.log("Login com Google bem-sucedido:", response);
     } catch (error) {
@@ -25,7 +26,7 @@ const LoginGoogle = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId="668469425698-17ulsbs51rvuejdd1pkco6bhtilotqs5.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="668469425698-139ftmp7dkubcvs0q6hv9r8ftt5iklsp.apps.googleusercontent.com">
       <div className="flex flex-col items-center">
         <h1 className="mb-4 text-xl">Faça login</h1>
 
