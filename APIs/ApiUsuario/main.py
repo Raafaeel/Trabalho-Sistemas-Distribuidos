@@ -174,7 +174,7 @@ def google_auth(request: GoogleAuthRequest, db: Session = Depends(get_db)):
             idinfo = id_token.verify_oauth2_token(
                 request.token, requests.Request(), client_id
             )
-            break  # If successful, exit the loop
+            break  
         except ValueError:
             continue  # Try the next Client ID
 
