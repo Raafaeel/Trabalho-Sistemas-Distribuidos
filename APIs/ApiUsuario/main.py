@@ -35,9 +35,9 @@ class UsuarioDB(Base):
     codigo = Column(Integer, primary_key=True, index=True)
     Nome = Column(String(50), nullable=False)
     Nascimento = Column(Date, nullable=False)
-    Sexo = Column(String(1), nullable=False)
-    Latitude = Column(Float)
-    Longitude = Column(Float)
+    Sexo = Column(String(1), nullable=True)
+    Latitude = Column(Float, nullable = True)
+    Longitude = Column(Float, nullable = True)
     login = Column(String(100), nullable = False)
     senha = Column(String(1024), nullable=True)
 
@@ -45,12 +45,12 @@ Base.metadata.create_all(bind=engine)
 
 class UsuarioBase(BaseModel):
     Nome: str = Field(..., max_length=50)
-    Nascimento: date
-    Sexo: str = Field(..., max_length=1)
+    Nascimento: Optional[date] = None
+    Sexo: Optional[str] = Field(None, max_length=1)
     Latitude: Optional[float] = None
     Longitude: Optional[float] = None
     login: str = Field(..., max_length=1024)
-    senha: str = Field(..., max_length=100)
+    senha: Optional[str] = Field(None, max_length=100)
 
 
 class UsuarioCreate(UsuarioBase):
@@ -162,46 +162,58 @@ class GoogleAuthRequest(BaseModel):
 
 @app.post("/auth/google")
 def google_auth(request: GoogleAuthRequest, db: Session = Depends(get_db)):
-    try:
-        # Verify token
-        idinfo = id_token.verify_oauth2_token(
-            request.token, requests.Request(), "668469425698-17ulsbs51rvuejdd1pkco6bhtilotqs5.apps.googleusercontent.com"
-        )
+    client_ids = [
+        "668469425698-17ulsbs51rvuejdd1pkco6bhtilotqs5.apps.googleusercontent.com", 
+        "668469425698-139ftmp7dkubcvs0q6hv9r8ftt5iklsp.apps.googleusercontent.com",  
+    ]
 
-        # Validate the issuer
-        if idinfo["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
-            raise ValueError("Wrong issuer.")
-
-        google_id = idinfo["sub"]
-        email = idinfo["email"]
-        name = idinfo.get("name", "Unknown User")
-
-        # Check if user exists
-        user = db.query(UsuarioDB).filter(UsuarioDB.login == email).first()
-        if not user:
-            # Create user if not found
-            user = UsuarioDB(
-                Nome=name,
-                Nascimento=date.today(),
-                Sexo="U",
-                Latitude=None,
-                Longitude=None,
-                login=email,
-                senha=None,
+    idinfo = None
+    for client_id in client_ids:
+        try:
+            # Verify token against the current Client ID
+            idinfo = id_token.verify_oauth2_token(
+                request.token, requests.Request(), client_id
             )
-            db.add(user)
-            db.commit()
-            db.refresh(user)
+            break  # If successful, exit the loop
+        except ValueError:
+            continue  # Try the next Client ID
 
-        # Return the user
-        return {
-            "message": "Login successful",
-            "user": {
-                "id": user.codigo,
-                "name": user.Nome,
-                "email": user.login,
-            },
-        }
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail="Invalid Google token") from e
+    if not idinfo:
+        raise HTTPException(status_code=400, detail="Invalid Google token")
+
+    # Validate the issuer
+    if idinfo["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
+        raise HTTPException(status_code=400, detail="Wrong issuer")
+
+    google_id = idinfo["sub"]
+    email = idinfo["email"]
+    name = idinfo.get("name", "Unknown User")
+
+    # Check if user exists
+    user = db.query(UsuarioDB).filter(UsuarioDB.login == email).first()
+    if not user:
+        # Create user if not found
+        user = UsuarioDB(
+            Nome=name,
+            Nascimento=date.today(),
+            Sexo="",
+            Latitude=None,
+            Longitude=None,
+            login=email,
+            senha=None,
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+    # Return the user
+    return {
+        "message": "Login successful",
+        "user": {
+            "id": user.codigo,
+            "name": user.Nome,
+            "email": user.login,
+        },
+    }
+
 
